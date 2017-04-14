@@ -34,6 +34,8 @@ By default the reconciliation service uses a simple python dictionary to look up
 results - the names are normalised and stored as keys, and the ids are returned based
 on normalising the query.
 
+The default `id` heading in your CSV is "id", and the default `search_field` is "name".
+
 To use the "whoosh" library, with more advanced indexing and fuzzy matching, then set
 the `--storage` value to `whoosh` like so:
 
