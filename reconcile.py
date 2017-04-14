@@ -8,6 +8,12 @@ import argparse
 import csv
 from collections import OrderedDict
 
+def utf8_dict_decoder(utf8_csv_data):
+	return {k.decode('utf-8'): v.decode('utf-8') for k,v in utf8_csv_data.items()}
+	
+def utf8_decoder(utf8_csv_data):
+	return [v.decode('utf-8') for v in utf8_csv_data]
+
 def get_from_csv(csv_file, header_row=True, delimiter=","):
     """ Turn a CSV file into a list of dicts/lists
     """
@@ -19,10 +25,13 @@ def get_from_csv(csv_file, header_row=True, delimiter=","):
             reader = csv.DictReader(f, delimiter=delimiter)
         else:
             reader = csv.reader(f, delimiter=delimiter)
-            
-        for row in reader:
-            source.append(row)
-    
+			
+    	for row in reader:
+			if(header_row):
+				source.append(utf8_dict_decoder(row))
+			else:
+				source.append(utf8_decoder(row))
+	
     return source         
             
 def main():
@@ -46,7 +55,7 @@ def main():
     # URL that will host the reconciliation service
     service_url = "http://" + args.host + ":" + str(args.port) + "/"
     if args.debug: 
-        print "Reconciliation service starting on:", service_url
+        print("Reconciliation service starting on:", service_url)
     
     # get the data from the CSV file
     source = get_from_csv( args.csv, header_row = args.header_row, delimiter = args.delimiter )
